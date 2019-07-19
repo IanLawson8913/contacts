@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="javascripts/jquery.js"></script>
+  <script src="javascripts/handlebars.js"></script>
+  <script type="text/javascript" src="javascripts/contacts.js"></script>
+  <link rel="stylesheet" type="text/css" href="stylesheets/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Contact Manager</h1>
+    <h3>A simple front-end practice project</h3>
+  </header>
+  <main>
+    <div id="home-container">
+      <div id="search-add-bar">
+        <button class="add-btn" action="#">Add Contact</button>
+        <input type="text" id="search" placeholder="Search"></input>
+      </div>
+      <div id="contacts-container" class="hidden"></div>
+    </div>
+    <div id="add-container" class="hidden"></div>
+    <div id="edit-container" class="hidden"></div>
+  </main>
+  <footer>
+    <p>Developed by Ian Lawson</p>
+  </footer>
+  <script id="contacts-template" type="text/x-handlebars-template">
+    {{#each contacts}}
+      <div class="contact-box">
+        <h4>{{full_name}}</h4>
+        <div class="tags-container">
+          {{#each tags}}
+            <span class="tag">{{this}}</span>
+          {{/each}}
+        </div>
+        <dl>
+          <dt>Phone number:</dt>
+          <dd>{{phone_number}}</dd>
+          <dt>Email:</dt>
+          <dd>{{email}}</dd>
+        </dl>
+        <div class="contact-buttons">
+          <button type="button" class="edit-btn" data-id="{{id}}">Edit</button>
+          <button type="button" class="delete-btn" data-id="{{id}}">Delete</button>
+        </div>
+      </div>
+    {{/each}}
+  </script>
+  <script id="form-template" type="text/x-handlebars-template">
+    <form id={{form_id}} method={{method}} class="form" novalidate>
+      <h2>{{title}} Contact</h2>
+      <legend>Edit Contact</legend>
+      <dl>
+        <label for="full-name">
+          <dt>Full name</dt>
+          <dd>
+            <input type="text" id="full-name" name="full_name" placeholder="{{full_name}}"" required pattern="[\w\-'\s]+">
+            <p class="message"></p>
+          </dd>
+        </label>
+        <label for="email">
+          <dt>Email</dt>
+          <dd>
+            <input type="email" id="email" name="email" placeholder="{{email}}" required>
+            <p class="message"></p>
+          </dd>
+        </label>
+        <label for="phone">
+          <dt>Phone number</dt>
+          <dd>
+            <input type="text" id="phone" name="phone_number" placeholder="{{phone_number}}" required>
+            <p class="message"></p>
+          </dd>
+        </label>
+        <label for="tags">
+          <dt>Tags (optional)</dt>
+          <dd>
+            <select id="tags" name="tags" multiple>
+              <option value="work">Work</option>
+              <option value="family">Family</option>
+              <option value="friends">Friends</option>
+            </select>
+            <p class="message"></p>
+          </dd>
+        </label>
+      </dl>
+      <button type="submit">Submit</button>
+      <button type="button" class="cancel-btn">Cancel</button>
+    </form>
+  </script>
+</body>
+</html>

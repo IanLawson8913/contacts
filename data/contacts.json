@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "full_name": "Naveed Fida",
+    "email": "nf@example.com",
+    "phone_number": "12345678901",
+    "tags": "work,friend"
+  },
+  {
+    "full_name": "ian lawson",
+    "phone_number": "4434540163",
+    "email": "ianlawsonmusic@gmail.com",
+    "tags": "work,family",
+    "id": 2
+  },
+  {
+    "full_name": "Evan",
+    "phone_number": "1234561234",
+    "email": "ebertrand@gmail.com",
+    "tags": "family",
+    "id": 4
+  },
+  {
+    "full_name": "John Smith",
+    "phone_number": "543-123-4321",
+    "email": "JS@youtube.com",
+    "tags": "family",
+    "id": 5
+  },
+  {
+    "full_name": "john s",
+    "phone_number": "543-123-4321",
+    "email": "JS@youtube.com",
+    "tags": "friends",
+    "id": 6
+  }
+]
