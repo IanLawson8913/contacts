@@ -27,6 +27,10 @@ form {
   text-align: center;
 }
 
+#search-add-bar form {
+  height: 20px;
+}
+
 footer {
   background-color: #FFFBFA;
   color: #d9d9d9;
@@ -35,6 +39,19 @@ footer {
   position: fixed;
   bottom: 0;
   text-align: center;
+}
+
+i {
+  margin-right: 8px;
+}
+
+button {
+  height: 45px;
+  width: 175px;
+  background-color: #ffffff;
+  border: solid #221D23 1px;
+  color: #000000;
+  margin: 35px 45px 35px 0;
 }
 
 #home-container {
@@ -53,6 +70,36 @@ footer {
   content: "";
   flex: 0 0 32%;
   max-width: 480px
+}
+
+#options {
+  text-align: right;
+}
+
+#options label {
+  margin-left: 8px;
+}
+
+#search-add-bar button {
+  margin-bottom: 0;
+}
+
+fieldset {
+  border: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 3px 5px 3px 10px;
+}
+
+h5 {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 200;
+  margin: 0;
+}
+
+label {
+  margin-bottom: 10px;
 }
 
 #add-container, #edit-container, #search-add-bar {
@@ -139,11 +186,11 @@ select {
   text-align: left;
 }
 
-label {
+.contact-box label {
   display: block;
 }
 
-input {
+input[type="text"] {
   border: 1px solid #d9d9d9;
   border-radius: 5px;
   height: 28px;
@@ -152,13 +199,12 @@ input {
   width: 200px;
 }
 
-button {
-  height: 45px;
-  width: 175px;
-  background-color: #ffffff;
-  border: solid #221D23 1px;
-  color: #000000;
-  margin: 35px 45px 35px 0;
+#options-btn {
+  border-radius: 5px;
+  margin-left: 15px;
+  padding: 5px;
+  height: 30px;
+  width: 90px;
 }
 
 .contact-box button {

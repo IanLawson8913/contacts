@@ -8,18 +8,39 @@
   <script src="javascripts/jquery.js"></script>
   <script src="javascripts/handlebars.js"></script>
   <script type="text/javascript" src="javascripts/contacts.js"></script>
+  <script src="https://kit.fontawesome.com/489b9f4f3d.js"></script>
   <link rel="stylesheet" type="text/css" href="stylesheets/styles.css">
 </head>
 <body>
   <header>
     <h1>Contact Manager</h1>
-    <h3>A simple front-end practice project</h3>
+    <h3>Keep track of all your peeps</h3>
   </header>
   <main>
     <div id="home-container">
       <div id="search-add-bar">
         <button class="add-btn" action="#">Add Contact</button>
         <input type="text" id="search" placeholder="Search"></input>
+        <button id="options-btn"><i class="fas fa-angle-down"></i>Options</button>
+        <div id="options" class="hidden">
+          <form id="sort-by-form">
+            <fieldset>
+              <h5>Sort By:</h5>
+              <label>
+                <input type="radio" name="sort" value="full_name">Name
+              </label>
+              <label>
+                <input type="radio" name="sort" value="email">Email
+              </label>
+              <label>
+                <input type="radio" name="sort" value="phone_number">Phone
+              </label>
+              <label>
+                <input type="radio" name="sort" value="id" checked>Id
+              </label>
+            </fieldset>
+          </form>
+        </div>
       </div>
       <div id="contacts-container" class="hidden"></div>
     </div>
@@ -27,7 +48,7 @@
     <div id="edit-container" class="hidden"></div>
   </main>
   <footer>
-    <p>Developed by Ian Lawson</p>
+    <p>Developed by Ian Lawson for Launch School</p>
   </footer>
   <script id="contacts-template" type="text/x-handlebars-template">
     {{#each contacts}}
@@ -45,14 +66,19 @@
           <dd>{{email}}</dd>
         </dl>
         <div class="contact-buttons">
-          <button type="button" class="edit-btn" data-id="{{id}}">Edit</button>
-          <button type="button" class="delete-btn" data-id="{{id}}">Delete</button>
+          <button type="button" class="edit-btn" data-id="{{id}}">
+            <i class="fas fa-pencil-alt"></i>Edit
+          </button>
+          <button type="button" class="delete-btn" data-id="{{id}}">
+            <i class="fas fa-trash-alt"></i>
+            Delete
+          </button>
         </div>
       </div>
     {{/each}}
   </script>
   <script id="form-template" type="text/x-handlebars-template">
-    <form id={{form_id}} method={{method}} class="form" novalidate>
+    <form id={{form_id}} method={{method}} action="#" novalidate>
       <h2>{{title}} Contact</h2>
       <legend>Edit Contact</legend>
       <dl>
@@ -66,7 +92,7 @@
         <label for="email">
           <dt>Email</dt>
           <dd>
-            <input type="email" id="email" name="email" placeholder="{{email}}" required>
+            <input type="text" id="email" name="email" placeholder="{{email}}" required pattern="\S+@\S+\.\S+">
             <p class="message"></p>
           </dd>
         </label>
@@ -85,7 +111,6 @@
               <option value="family">Family</option>
               <option value="friends">Friends</option>
             </select>
-            <p class="message"></p>
           </dd>
         </label>
       </dl>

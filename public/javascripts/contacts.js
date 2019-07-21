@@ -9,9 +9,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
       this.templates = this.getTemplates();
       this.contacts = null;
+      this.searchOptions = document.getElementById('options');
 
-      this.displayForm(this.containers.add)
-      this.refreshContacts();
+      this.displayForm(this.containers.add);
+      this.getContacts();
       this.attachListeners();
     },
 
@@ -19,64 +20,87 @@ document.addEventListener('DOMContentLoaded', function(event) {
       let contactsContainer =  document.getElementById('contacts-container');
       let addForm = document.getElementById('add-form');
       let search = document.getElementById('search');
+      let options = document.getElementById('options-btn');
+      let sortBy = this.searchOptions.querySelector('#sort-by-form');
+      let searchOptions = this.searchOptions.querySelector('#search-form');
 
-      document.addEventListener('click', this.handleNav.bind(this));
       addForm.addEventListener('submit', this.handleFormSubmit.bind(this));
+      options.addEventListener('click', this.handleToggleOptions.bind(this));
+      document.addEventListener('click', this.handleNav.bind(this));
       contactsContainer.addEventListener('click', this.handleContactAlteration.bind(this));
+
       search.addEventListener('keyup', this.handleSearchKeyup.bind(this));
+      sortBy.addEventListener('click', this.handleSortChange.bind(this));
     },
 
-    getContact(id) {
-      let request = new XMLHttpRequest();
-      request.open('GET', 'http://localhost:3000/api/contacts/' + String(id));
-      request.responseType = 'json';
-
-      request.addEventListener('load', function(event) { 
-        this.contact = request.response;
-      }.bind(this));
-
-      request.send();
-    },
-
-    refreshContacts() {
+    getContacts() {
       let request = new XMLHttpRequest();
       request.open('GET', 'http://localhost:3000/api/contacts/');
       request.responseType = 'json';
 
-      request.addEventListener('load', this.handleGetContacts.bind(this));
+      request.addEventListener('load', this.handleRefresh.bind(this));
 
       request.send();
     },
 
-    handleSearchKeyup(event) {
-      let val = event.currentTarget.value;
-      let matched = this.search(val, this.contacts);
+    submitForm(form) {
+      let id = form.dataset.id || '';
+      let request = new XMLHttpRequest();
+      let json = this.formToJSON(form, id);
 
-      this.displayContacts(matched);
+      request.open(form.getAttribute('method'), 'http://localhost:3000/api/contacts/' + id);
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.responseType = 'json';
+
+      request.addEventListener('load', function(event) {
+        this.getContacts();
+      }.bind(this));
+
+      request.send(json);
     },
 
-    handleNav(event) {
-      event.preventDefault();
-
-      if (event.target.nodeName !== 'BUTTON') {
-        return;
-      }
-
-      let classList = event.target.classList;
-
-      if (classList.contains('cancel-btn')) {
-        this.navigateTo('home');
-      } else if (classList.contains('add-btn')) {
-        this.navigateTo('add');
-      }
-    },
-
-    handleGetContacts(event) {
+    handleRefresh(event) {
       let request = event.currentTarget;
       let response = request.response;
 
       this.contacts = this.convertTagsToArray(response);
+
       this.displayContacts(this.contacts);
+      this.navigateTo('home');
+    },
+
+    handleEdit(event) {
+      let contact = event.currentTarget.response;
+
+      this.displayForm(this.containers.edit, contact);
+      this.navigateTo('edit');
+
+      editForm = document.getElementById('edit-form');
+      editForm.dataset.id = String(contact.id);
+      editForm.addEventListener('submit', this.handleFormSubmit.bind(this));
+    },
+
+    handleDelete(event) {
+      this.getContacts();
+    },
+
+    handleNav(event) {
+      let target = event.target;
+      let type = target.getAttribute('type');
+
+      if (target.nodeName !== 'BUTTON') { return; }
+
+      let classList = event.target.classList;
+
+      if (classList.contains('cancel-btn')) {
+        let form = target.closest('form');
+
+        form.reset();
+        this.clearValidation(form);
+        this.navigateTo('home');
+      } else if (classList.contains('add-btn')) {
+        this.navigateTo('add');
+      }
     },
 
     handleContactAlteration(event) {
@@ -94,32 +118,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
       if (isEditBtn) {
         request.open('GET', path);
         request.responseType = "json";
-        request.addEventListener('load', this.handleCreateEditForm.bind(this));
+        request.addEventListener('load', this.handleEdit.bind(this));
       } else if (isDeleteBtn) {
         request.open('DELETE', path);
-        request.addEventListener('load', this.refreshContacts.bind(this));
+        request.addEventListener('load', this.handleDelete.bind(this));
       }
-
-      request.send();
-    },
-
-    handleCreateEditForm(event) {
-      let id = event.currentTarget.response.id;
-      let request = new XMLHttpRequest();
-      let editForm;
-
-      request.open('GET', 'http://localhost:3000/api/contacts/' + String(id));
-      request.responseType = 'json';
-
-      request.addEventListener('load', function(event) { 
-        this.contact = request.response;
-        this.displayForm(this.containers.edit, this.contact);
-        this.navigateTo('edit');
-
-        editForm = document.getElementById('edit-form');
-        editForm.dataset.id = String(id);
-        editForm.addEventListener('submit', this.handleFormSubmit.bind(this));
-      }.bind(this));
 
       request.send();
     },
@@ -129,31 +132,37 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
       let form = event.currentTarget;
       let isInvalid = !form.checkValidity();
-      let id = form.dataset.id || '';
 
       if (isInvalid) {
-        this.validateForm(this.form);
+        this.validateForm(form);
         return;
       }
 
-      let request = new XMLHttpRequest();
-      let json = this.formToJSON(event.currentTarget, id);
-
-      request.open(form.getAttribute('method'), 'http://localhost:3000/api/contacts/' + id);
-      request.setRequestHeader('Content-Type', 'application/json');
-      request.responseType = 'json';
-
-      request.addEventListener('load', this.refreshGoHome.bind(this));
-
-      request.send(json)
+      this.submitForm(form);
     },
 
-    refreshGoHome: function(event) {
-      this.refreshContacts();
-      this.navigateTo('home');
+    handleToggleOptions(event) {
+      this.toggle(this.searchOptions);
     },
 
-    // data processing
+    handleSortChange(event) {
+      let isRadio = event.target.getAttribute('type') === 'radio';
+
+      if (isRadio) {
+        let option = event.target.value;
+        this.sortContactsBy(option);
+        this.displayContacts(this.contacts);
+      }
+    },
+
+    handleSearchKeyup(event) {
+      let val = event.currentTarget.value;
+      let matched = this.search(val, this.contacts);
+
+      this.displayContacts(matched);
+    },
+
+    // misc
 
     convertTagsToArray: function(contacts) {
       return contacts.map(contact => {
@@ -194,6 +203,18 @@ document.addEventListener('DOMContentLoaded', function(event) {
       });
     },
 
+    sortContactsBy: function(option) {
+      this.contacts.sort(function(a, b) {
+        if (a[option] < b[option]) {
+          return -1;
+        } else if (a[option] > b[option]) {
+          return 1;
+        }
+
+        return 0;
+      });
+    },
+
     justDigits: function(phoneStr) {
       let chars = phoneStr.split('');
       let digits = chars.filter.filter(digit => !isNaN(digit)).join('');
@@ -201,10 +222,19 @@ document.addEventListener('DOMContentLoaded', function(event) {
       return digits;
     },
 
+    getTemplates: function() {
+      let templates = {};
+      let scripts = document.querySelectorAll('script[type="text/x-handlebars-template"]');
+
+      scripts.forEach(({ id, innerHTML }) => templates[id] = Handlebars.compile(innerHTML) );
+
+      return templates;
+    },
+
     // form validation
 
-    validateForm: function() {  
-      let inputs = this.containers.add.querySelectorAll('input');
+    validateForm: function(form) {  
+      let inputs = form.querySelectorAll('input');
 
       inputs.forEach(input => {
         if (input.validity) { this.processValidation(input) }
@@ -212,13 +242,14 @@ document.addEventListener('DOMContentLoaded', function(event) {
     },
 
     processValidation: function(input) {
-      let inputName = input.parentElement.previousElementSibling.textContent.toLowerCase();
+      let dt = input.parentElement.previousElementSibling
+      let desc = dt.textContent.toLowerCase();
       let message = '';
       
       if (input.validity.valueMissing) {
-        message = `Please enter a ${inputName}.`;
+        message = `Please enter a ${desc}.`;
       } else if (input.validity.patternMismatch) {
-        message = `Invalid ${inputName}.`
+        message = `Invalid ${desc}.`
       }
 
       this.displayValidationMessage(input, message);
@@ -234,13 +265,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
       }
     },
 
-    getTemplates: function() {
-      let templates = {};
-      let scripts = document.querySelectorAll('script[type="text/x-handlebars-template"]');
+    toggle: function(element) {
+      let classList = element.classList;
+      let isHidden = element.classList.contains('hidden');
 
-      scripts.forEach(({ id, innerHTML }) => templates[id] = Handlebars.compile(innerHTML) );
-
-      return templates;
+      isHidden ? classList.remove('hidden') : classList.add('hidden');
     },
 
     displayContacts: function(contacts) {
@@ -265,6 +294,14 @@ document.addEventListener('DOMContentLoaded', function(event) {
       }
     },
 
+    clearValidation(form) {
+      let invalidElements = form.querySelectorAll('.invalid');
+      let messages = form.querySelectorAll('.message');
+
+      invalidElements.forEach(el => el.classList.remove('invalid'));
+      messages.forEach(el => el.textContent = '');
+    },
+
     displayForm(container, contact) {
       let formTemplate = this.templates['form-template'];
       let templateData = {};
@@ -287,69 +324,3 @@ document.addEventListener('DOMContentLoaded', function(event) {
   let app = Object.create(contacts);
   app.init();
 });
-
-
-
-  // let add = document.getElementById('add-form');
-  // let contactsTemplate = Handlebars.compile(document.getElementById('contacts-template').innerHTML);
-
-  // function validateEmptyInput(input) {
-    // let inputName = input.getAttribute('name');
-    // let messageP = input.nextElementSibling;
-    // let dt = input.closest('label').querySelector('dt');
-    
-    // if (input.validity.valueMissing) {
-    //   messageP.textContent = `Please enter the ${inputName}.`; 
-    //   messageP.style.display = 'inline-block';
-    //   dt.classList.add('invalid');
-    // } else {
-    //   messageP.style.display = 'none';
-    //   dt.classList.remove('invalid');
-    // }
-  // };
-
-  // function validateForm(form) {
-  //   let inputs = add.querySelectorAll('input');
-
-  //   inputs.forEach(input => {
-  //     if (input.validity) { validateEmptyInput(input) };
-  //   });
-  // };
-
-  // function formToJson(form) {
-    // var textInputs = form.querySelectorAll('input');
-    // var tagSelect = form.querySelector('select');
-    // var tags = Array.prototype.slice.call(tagSelect.selectedOptions);
-    // var data = {};
-
-    // textInputs.forEach(( {name, value} ) => { data[name] = value; });
-
-    // data['tags'] = tags.map(option => option.value).join(',');
-
-    // return JSON.stringify(data);
-  // };
-
-  // function handleFormSubmit(event) {
-  //   event.preventDefault();
-
-  //   let form = event.currentTarget;
-  //   validateForm(form);
-
-  //   if (form.checkValidity()) {
-  //     let request = new XMLHttpRequest();
-  //     let json = formToJson(event.currentTarget);
-
-  //     request.open(form.method, 'http://localhost:3000/api/contacts/');
-  //     request.setRequestHeader('Content-Type', 'application/json');
-  //     request.responseType = 'json';
-
-  //     request.addEventListener('load', function(event) {
-  //       var response = request.response;
-  //       response.tags = response.tags.split(',');
-
-  //       // console.log(response);
-  //     });
-
-  //     request.send(json);
-  //   }
-  // };
