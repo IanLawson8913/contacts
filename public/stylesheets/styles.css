@@ -1,34 +1,30 @@
 body {
-  color: #221D23;
-  font-family: Helvetica, Arial, sans-serif;
+  background-color: #8FC1E3;
+  font-family: 'Slabo 13px', sans-serif;
+  font-size: 16px;
   margin: 0;
 }
 
 header {
-  background-color: #D1603D;
-  color: #FFFBFA;
+  background-color: #8FC1E3;
+  color: #F7F9FB;
   padding: 25px;
   text-align: center;
 }
 
 main {
-  background-image: url("../images/color_wave background_737271.jpg");
-  background-color: #51D0DE;
-  background-size: cover;
-  padding: 35px 0 70px 0;
   min-height: 700px;
 }
 
 form { 
   font-size: 0;
-  height: 450px;
   margin: 0 auto;
   padding: 10px;
   text-align: center;
 }
 
-#search-add-bar form {
-  height: 20px;
+#search {
+  width: 300px;
 }
 
 footer {
@@ -49,9 +45,17 @@ button {
   height: 45px;
   width: 175px;
   background-color: #ffffff;
-  border: solid #221D23 1px;
+  border: none;
   color: #000000;
-  margin: 35px 45px 35px 0;
+  margin: 35px 45px 0 0;
+}
+
+.small-btn {
+  margin: 0;
+}
+
+#search-add-bar dl {
+  display: inline-block;
 }
 
 #home-container {
@@ -68,20 +72,11 @@ button {
 
 #contacts-container::after {
   content: "";
-  flex: 0 0 32%;
-  max-width: 480px
-}
-
-#options {
-  text-align: right;
+  flex: 0 0 33%;
 }
 
 #options label {
   margin-left: 8px;
-}
-
-#search-add-bar button {
-  margin-bottom: 0;
 }
 
 fieldset {
@@ -91,28 +86,23 @@ fieldset {
   margin: 3px 5px 3px 10px;
 }
 
-h5 {
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 200;
-  margin: 0;
-}
-
 label {
   margin-bottom: 10px;
 }
 
 #add-container, #edit-container, #search-add-bar {
-  background-color: rgba(255, 251, 250, .95);
-  border: solid 1px #000000;
-  border-radius: 10px;
-  color: #31081F;
-  margin: 0 auto 8px auto;
+  margin: 10px auto 8px auto;
   text-align: center;
   width: 800px;
 }
 
+#add-container, #edit-container {
+  background-color: #F7F9FB;
+  border-radius: 5px;
+}
+
 h1 {
+  font-family: 'Slabo 13px', sans-serif;
   font-size: 58px;
   font-weight: 400;
   margin: 0;
@@ -129,7 +119,21 @@ h2 {
 }
 
 h3 {
+  font-family: 'Reenie Beanie', cursive;
   font-weight: 300;
+  font-size: 30px;
+}
+
+h4 {
+  font-size: 30px;
+  margin: 20px 0;
+}
+
+h5 {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 200;
+  margin: 0;
 }
 
 dt, dd {
@@ -145,8 +149,8 @@ dt {
   text-align: right;
 }
 
-label[for="tags"] dt {
-  vertical-align: top;
+dt::after {
+  content: ":";
 }
 
 dd {
@@ -159,11 +163,6 @@ select {
   width: 100px;
 }
 
-.contact-box h4 {
-  font-size: 20px;
-  margin: 20px 0;
-}
-
 .contact-box dl {
   text-align: left;
 }
@@ -171,7 +170,7 @@ select {
 .contact-box dt {
   display: block;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 100;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -182,7 +181,7 @@ select {
   display: block;
   font-size: 16px;
   font-weight: 200;
-  margin: 0 0 10px 0;
+  margin: 4px 0 10px 10px;
   text-align: left;
 }
 
@@ -191,7 +190,7 @@ select {
 }
 
 input[type="text"] {
-  border: 1px solid #d9d9d9;
+  border: 1px solid #f0f0f0;
   border-radius: 5px;
   height: 28px;
   margin-bottom: 20px;
@@ -199,32 +198,26 @@ input[type="text"] {
   width: 200px;
 }
 
-#options-btn {
+.small-btn {
   border-radius: 5px;
-  margin-left: 15px;
+  margin: 0 0 0 15px;
   padding: 5px;
   height: 30px;
   width: 90px;
 }
 
-.contact-box button {
-  height: 35px;
-  margin: 0 5px 10px 5px;
-  vertical-align: bottom;
-  width: 100px;
-}
-
 .contact-box {
-  background-color: rgba(255, 251, 250, .95);
-  border: solid 1px #000000;
-  border-radius: 10px;
+  background-color: #F7F9FB;
+  border-radius: 5px;
+  box-sizing: border-box;
   display: inline-block;
-  height: 200px;
+  color: #000000;
+  height: 250px;
   margin-bottom: 8px;
-  padding: 5px;
+  padding: 10px;
   position: relative;
   vertical-align: top;
-  width: 31%;
+  width: 33%;
 }
 
 .tags-container {
@@ -236,26 +229,80 @@ input[type="text"] {
   width: 100%;
 }
 
+header .tag {
+  font-size: 18px;
+  height: 20px;
+  width: 40px;
+}
+
+.contact-buttons {
+  position: absolute;
+  bottom: 25px;
+}
+
 .tag {
-  border: 1px solid #31081F;
+  border: 1px solid #ffffff;
   border-radius: 3px;
   font-size: 10px;
   margin-left: 5px;
   padding: 3px;
 }
 
-button:hover {
-  background-color: #79CAEA;
+.contact-box .tag {
+  color: #000000;
+  border-color: #000000;
 }
 
-.cancel-btn:hover, .delete-btn:hover {
-  background-color: #D1603D;
+#new-tag-form {
+  position: relative;
+}
+
+#new-tag-form .message {
+  position: absolute;
+  bottom: 0px
+}
+
+#add-btn, button[type="submit"] {
+  background-color: rgba(0, 255, 132, .8);
+  color: white;
+  font-size: 16px;
+  font-weight: 200;
+}
+
+#add-btn:hover, button[type="submit"]:hover {
+  background-color: rgba(0, 255, 132, .5);
+}
+
+.edit-btn:hover {
+  background-color: rgb(251, 255, 0);
+  border: none;
+}
+
+.delete-btn:hover {
+  background-color: rgb(255, 61, 123);
+  border: none;
+}
+
+.cancel-btn {
+  background-color: rgb(255, 61, 123);
+}
+
+.cancel-btn:hover {
+  background-color: rgb(255, 61, 123, .5);
+}
+
+#new-tag-btn:hover, #options-btn:hover {
+  background-color: rgba(0, 0, 0, .3);
+}
+
+.clicked {
+  background-color: rgba(0, 0, 0, .3);
 }
 
 .message {
   color: red;
+  display: inline-block;
   font-size: 12px;
-  display: none;
 }
 
 .hidden {
@@ -264,4 +311,25 @@ button:hover {
 
 .invalid {
   color: red;
+}
+
+.highlight {
+  border: 1px dotted yellow;
+  color: yellow;
+}
+
+.cursive {
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 28px;
+  margin: 0 10px;
+}
+
+header .tag:hover {
+  border: 1px dotted #0D1893;
+  color: #0D1893;
+  cursor: pointer;
+}
+
+#all-tags {
+  display: inline-block;
 }

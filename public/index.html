@@ -9,19 +9,39 @@
   <script src="javascripts/handlebars.js"></script>
   <script type="text/javascript" src="javascripts/contacts.js"></script>
   <script src="https://kit.fontawesome.com/489b9f4f3d.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Reenie+Beanie|Slabo+13px&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="stylesheets/styles.css">
 </head>
 <body>
   <header>
-    <h1>Contact Manager</h1>
-    <h3>Keep track of all your peeps</h3>
+    <h1>Contacts Manager</h1>
+    <h3>Select tags below to narrow your search...</h3>
+    <p id="tags-header">
+      <div id="user-tags"></div>
+    </p>
   </header>
   <main>
     <div id="home-container">
       <div id="search-add-bar">
-        <button class="add-btn" action="#">Add Contact</button>
+        <button id="add-btn" action="#"><i class="fas fa-user-plus"></i>Add Contact</button>
         <input type="text" id="search" placeholder="Search"></input>
-        <button id="options-btn"><i class="fas fa-angle-down"></i>Options</button>
+        <button id="options-btn" class="small-btn"><i class="fas fa-angle-down"></i>Options</button>
+        <button id="new-tag-btn" class="small-btn"><i class="fas fa-angle-down"></i>Add Tags</button>
+        <div id="new-tags-container" class="hidden">
+          <form id="new-tag-form" novalidate>
+            <button type="submit">Submit</button>
+            <dl>
+              <label for="tagName">
+                <dt>Tag name</dt>
+                <dd>
+                  <input type="text" id="tagName" placeholder="name" required pattern="[\w\-'\s]+">
+                  <p class="message"></p>
+                </dd>
+                <p class="message"></p>
+              </label>
+            </dl>
+          </form>
+        </div>
         <div id="options" class="hidden">
           <form id="sort-by-form">
             <fieldset>
@@ -36,7 +56,7 @@
                 <input type="radio" name="sort" value="phone_number">Phone
               </label>
               <label>
-                <input type="radio" name="sort" value="id" checked>Id
+                <input type="radio" name="sort" value="id" checked>Added
               </label>
             </fieldset>
           </form>
@@ -44,32 +64,76 @@
       </div>
       <div id="contacts-container" class="hidden"></div>
     </div>
-    <div id="add-container" class="hidden"></div>
+    <div id="add-container" class="hidden">
+      <form id="add-form" method="POST" action="#" novalidate>
+        <h2>Add Contact</h2>
+        <legend>Add Contact</legend>
+        <dl>
+          <label for="full-name">
+            <dt>Full name</dt>
+            <dd>
+              <input type="text" id="full-name" name="full_name" required pattern="[\w\-'\s]+">
+              <p class="message"></p>
+            </dd>
+          </label>
+          <label for="email">
+            <dt>Email</dt>
+            <dd>
+              <input type="text" id="email" name="email" required pattern="\S+@\S+\.\S+">
+              <p class="message"></p>
+            </dd>
+          </label>
+          <label for="phone">
+            <dt>Phone number</dt>
+            <dd>
+              <input type="text" id="phone" name="phone_number" required>
+              <p class="message"></p>
+            </dd>
+          </label>
+          <label for="tags">
+            <dt>Tags (optional)</dt>
+            <dd>
+              <fieldset id="tags"></fieldset>
+            </dd>
+          </label>
+        </dl>
+        <button type="submit">Submit</button>
+        <button type="button" class="cancel-btn">Cancel</button>
+      </form>
+    </div>
     <div id="edit-container" class="hidden"></div>
   </main>
   <footer>
     <p>Developed by Ian Lawson for Launch School</p>
   </footer>
+  <script id="tags-spans" type="text/x-handlebars-template">
+    {{#each tags}}
+      <span class="tag">{{this}}</span>
+    {{/each}}
+  </script>
+  <script id="tags-checkbox" type="text/x-handlebars-template">
+    {{#each tags}}
+      <input type="checkbox" for="tags" value="{{this}}">{{this}}</input>
+    {{/each}}
+  </script>
   <script id="contacts-template" type="text/x-handlebars-template">
     {{#each contacts}}
       <div class="contact-box">
         <h4>{{full_name}}</h4>
         <div class="tags-container">
-          {{#each tags}}
-            <span class="tag">{{this}}</span>
-          {{/each}}
+          {{> tagsPartial}}
         </div>
         <dl>
-          <dt>Phone number:</dt>
+          <dt>Phone number</dt>
           <dd>{{phone_number}}</dd>
-          <dt>Email:</dt>
+          <dt>Email</dt>
           <dd>{{email}}</dd>
         </dl>
         <div class="contact-buttons">
-          <button type="button" class="edit-btn" data-id="{{id}}">
+          <button type="button" class="edit-btn small-btn" data-id="{{id}}">
             <i class="fas fa-pencil-alt"></i>Edit
           </button>
-          <button type="button" class="delete-btn" data-id="{{id}}">
+          <button type="button" class="delete-btn small-btn" data-id="{{id}}">
             <i class="fas fa-trash-alt"></i>
             Delete
           </button>
@@ -78,8 +142,8 @@
     {{/each}}
   </script>
   <script id="form-template" type="text/x-handlebars-template">
-    <form id={{form_id}} method={{method}} action="#" novalidate>
-      <h2>{{title}} Contact</h2>
+    <form id="edit-form" method="PUT" action="#" data-id="{{id}}" novalidate>
+      <h2>Edit Contact</h2>
       <legend>Edit Contact</legend>
       <dl>
         <label for="full-name">
@@ -106,11 +170,11 @@
         <label for="tags">
           <dt>Tags (optional)</dt>
           <dd>
-            <select id="tags" name="tags" multiple>
-              <option value="work">Work</option>
-              <option value="family">Family</option>
-              <option value="friends">Friends</option>
-            </select>
+            <fieldset>
+              {{#each tags}}
+                <input type="checkbox" for="tags" value="{{this}}">{{this}}</input>
+              {{/each}}
+            </fieldset>
           </dd>
         </label>
       </dl>

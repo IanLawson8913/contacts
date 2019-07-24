@@ -1,51 +1,37 @@
 [
   {
-    "id": 1,
-    "full_name": "Naveed Fida",
-    "email": "nf@example.com",
-    "phone_number": "12345678901",
-    "tags": "work,friend"
+    "full_name": "Ian",
+    "phone_number": "421-123-1111",
+    "email": "ianlawsonmusic@gmail.com",
+    "tags": "work,family",
+    "id": 2
   },
   {
-    "full_name": "Evan",
-    "phone_number": "1234561234",
-    "email": "ebertrand@gmail.com",
-    "tags": "family",
+    "full_name": "Sandy",
+    "phone_number": "123-321-5164",
+    "email": "geckLife@gmail.com",
+    "tags": "pets",
     "id": 4
   },
   {
-    "full_name": "John Smith",
-    "phone_number": "543-123-4321",
-    "email": "JS@youtube.com",
-    "tags": "family",
+    "full_name": "Rod",
+    "phone_number": "1233321233",
+    "email": "r@yahoo.com",
+    "tags": "work,family,friends",
     "id": 5
-  },
-  {
-    "full_name": "123",
-    "phone_number": "123",
-    "email": "ian@jd.com",
-    "tags": "",
-    "id": 6
   },
   {
     "full_name": "Todd",
     "phone_number": "3215671223",
     "email": "tflanders@springfield.org",
-    "tags": "work",
-    "id": 11
-  },
-  {
-    "full_name": "Roddy",
-    "phone_number": "1233321233",
-    "email": "r@yahoo.com",
-    "tags": "",
-    "id": 12
-  },
-  {
-    "full_name": "Hava",
-    "phone_number": "4421235344",
-    "email": "binky@rabbits.com",
     "tags": "work,family",
-    "id": 13
+    "id": 6
+  },
+  {
+    "full_name": "Spongebob",
+    "phone_number": "4449870001",
+    "email": "imreader@bbottom.org",
+    "tags": "friends",
+    "id": 7
   }
 ]
